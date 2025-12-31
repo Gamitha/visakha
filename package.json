@@ -6,7 +6,8 @@
         "build": "vue-tsc && vite build",
         "dev": "vite",
         "lint": "eslint resources/js --ext .js,.ts,.vue --ignore-path .gitignore --fix",
-        "clean": "rm -rf public/build node_modules backend/node_modules"
+        "clean": "rm -rf public/build node_modules backend/node_modules",
+        "dev:all": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix .\""
     },
     "devDependencies": {
         "@inertiajs/vue3": "^2.0.0",
