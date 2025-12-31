@@ -36,11 +36,11 @@ export default defineConfig({
         // Proxy static files to backend (use 'backend' for Docker, 'localhost' for local dev)
         proxy: {
             '/storage': {
-                target: process.env.BACKEND_URL || 'http://localhost:3000',
+                target: process.env.BACKEND_URL || 'http://0.0.0.0:3000',
                 changeOrigin: true,
             },
             '/build': {
-                target: process.env.BACKEND_URL || 'http://localhost:3000',
+                target: process.env.BACKEND_URL || 'http://0.0.0.0:3000',
                 changeOrigin: true,
             },
         },
