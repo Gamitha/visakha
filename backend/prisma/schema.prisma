@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 Int       @id @default(autoincrement())
+  name               String    @db.VarChar(255)
+  email              String    @unique @db.VarChar(255)
+  phone              String?   @db.VarChar(20)
+  password           String    @db.VarChar(255)
+  emailVerifiedAt    DateTime? @map("email_verified_at")
+  rememberToken      String?   @map("remember_token") @db.VarChar(100)
+  isSuperAdmin       Boolean   @default(false) @map("is_super_admin")
+  isActive           Boolean   @default(true) @map("is_active")
+  mustChangePassword Boolean   @default(false) @map("must_change_password")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Event {
+  id            Int      @id @default(autoincrement())
+  title         String   @db.VarChar(255)
+  description   String   @db.Text
+  eventDate     DateTime @map("event_date") @db.Date
+  eventTime     String?  @map("event_time") @db.VarChar(50)
+  venue         String?  @db.VarChar(255)
+  images        Json?    @default("[]")
+  isActive      Boolean  @default(true) @map("is_active")
+  isTodaysEvent Boolean  @default(false) @map("is_todays_event")
+  hasAgenda     Boolean  @default(false) @map("has_agenda")
+  agenda        Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("events")
+}
+
+model Session {
+  sid       String   @id @db.VarChar(255)
+  sess      Json
+  expire    DateTime @db.Timestamp(6)
+
+  @@index([expire], name: "IDX_session_expire")
+  @@map("sessions")
+}
+
+model PasswordResetToken {
+  email     String   @id @db.VarChar(255)
+  token     String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("password_reset_tokens")
+}

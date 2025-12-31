@@ -1,0 +1,87 @@
+*.log
+.DS_Store
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+/.fleet
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+Homestead.json
+Homestead.yaml
+Thumbs.db
+.npm-cache
+dist/
+
+# Node.js
+node_modules/
+/app-node_modules/
+
+# Build output
+public/build/
+backend/public/build/
+backend/build/
+
+# Logs
+logs/
+
+# OS files
+Thumbs.db
+
+# Environment
+.env.*
+
+# Vite
+.vite/
+
+# Prisma
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+
+# Docker
+*.pid
+*.sock
+
+# VS Code
+.vscode/
+
+# Coverage
+coverage/
+
+# Misc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fly.io
+.fly/
+
+# Storage
+storage/app/private/
+storage/app/public/
+
+# Ignore local images
+public/images/
+
+# Ignore backups
+*.bak
+
+# Ignore temp files
+*.tmp
+*.swp
+*.swo
+
+# Ignore seed output
+backend/prisma/seed-output.json

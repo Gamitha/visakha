@@ -1,0 +1,93 @@
+services:
+  # Node.js Backend (Express + Prisma)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: visakha-backend
+    container_name: visakha-backend
+    restart: unless-stopped
+    tty: true
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: mysql://laravel:root@db:3306/laravel
+      SESSION_SECRET: your-super-secret-session-key-change-in-production
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+      APP_URL: http://localhost:3000
+    working_dir: /app
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
+      - ./storage:/storage
+      - ./public:/app/public
+      - backend_node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Frontend (Vite)
+  frontend:
+    image: node:22-alpine
+    container_name: visakha-frontend
+    restart: unless-stopped
+    working_dir: /app
+    environment:
+      NODE_ENV: development
+      BACKEND_URL: http://backend:3000
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/backend/node_modules # prevent backend modules from confusing frontend
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - app-network
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: visakha-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: laravel
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # MailHog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: visakha-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP port
+      - "8025:8025" # Web UI port
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+  backend_node_modules:
+    driver: local
